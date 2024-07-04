@@ -1,14 +1,6 @@
 package com.rhd.learningkafka;
 
 import java.util.Properties;
-
-import org.apache.kafka.clients.consumer.CooperativeStickyAssignor;
-import org.apache.kafka.clients.producer.KafkaProducer;
-
-import com.rhd.learningkafka.consumers.FirstConsumerClient;
-
-import com.rhd.learningkafka.producers.LocalProducer;
-import com.rhd.learningkafka.producers.Producer;
 import com.rhd.learningkafka.producers.wikimedia.WikiMediaChangesProducer;
 import com.rhd.learningkafka.properties.PropertiesFactory;
 
