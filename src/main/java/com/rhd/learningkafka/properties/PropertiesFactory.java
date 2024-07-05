@@ -35,6 +35,23 @@ public class PropertiesFactory {
         return properties;
     }
 
+
+    public static Properties buildOpenSearchWikimediaConsumer() {
+        
+        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("key.serializer", StringSerializer.class.getName());
+        properties.setProperty("value.serializer", StringSerializer.class.getName());
+        properties.setProperty("key.deserializer", StringDeserializer.class.getName());
+        properties.setProperty("value.deserializer", StringDeserializer.class.getName());
+        properties.setProperty("group.id", "consumer-opensearch-demo");
+        properties.setProperty("auto.offset.reset", "latest");
+        // This is Eager, it will stop everything;
+        // properties.setProperty("partition.assingment.strategy",
+        // RoundRobinPartitioner.class.getName());
+
+        return properties;
+    }
+
     public Properties create() {
         return properties;
     }
