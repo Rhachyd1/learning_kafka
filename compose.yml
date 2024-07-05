@@ -1,5 +1,7 @@
 version: "3"
 services:
+  wikimedia_producer:
+    image: test
   kafka_b:
     image: docker.io/bitnami/kafka:3.4
     hostname: kafka_b
