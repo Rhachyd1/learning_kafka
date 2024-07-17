@@ -36,12 +36,14 @@ import java.util.Properties;
 
 public class WikimediaConsumer {
 
-    public static RestHighLevelClient createOpenSearchClient() {
-        String connString = "http://localhost:9200";
+    private static final String CONN_STRING = "http://localhost:9200";
+
+    public RestHighLevelClient createOpenSearchClient() {
+        
 
         // we build a URI from the connection string
         RestHighLevelClient restHighLevelClient;
-        URI connUri = URI.create(connString);
+        URI connUri = URI.create(CONN_STRING);
         // extract login information if it exists
         String userInfo = connUri.getUserInfo();
 
@@ -73,6 +75,13 @@ public class WikimediaConsumer {
         }
 
         return restHighLevelClient;
+    }
+
+    public String getIdFromData(String json){
+        return JsonParser.parseString(json)
+                .getAsJsonObject().get("meta")
+                .getAsJsonObject().get("id")
+                .getAsString();
     }
 
     public void test(){

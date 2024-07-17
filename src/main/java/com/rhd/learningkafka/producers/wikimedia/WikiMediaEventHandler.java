@@ -37,6 +37,7 @@ public class WikiMediaEventHandler implements EventHandler {
     @Override
     public void onMessage(String event, MessageEvent messageEvent) throws Exception {
         log.info(messageEvent.getData());
+        log.info("Problema aqui");
         producer.send(new ProducerRecord<String,String>(topic,messageEvent.getData()));
     }
 

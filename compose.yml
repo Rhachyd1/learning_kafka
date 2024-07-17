@@ -1,9 +1,8 @@
 version: "3"
-services:
-  wikimedia_producer:
-    image: test
+services:  
   kafka_b:
     image: docker.io/bitnami/kafka:3.4
+    container_name: kafka_b
     hostname: kafka_b
     ports:
       - "9092:9092"
@@ -53,7 +52,7 @@ services:
     environment:
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
-
+ 
 volumes:
   kafka_data:
     driver: local

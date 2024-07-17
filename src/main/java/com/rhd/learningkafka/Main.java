@@ -16,10 +16,13 @@ import org.opensearch.client.RequestOptions;
 import org.opensearch.client.RestHighLevelClient;
 import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.index.fielddata.ordinals.GlobalOrdinalsIndexFieldData.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rhd.learningkafka.consumers.FirstConsumerClient;
 import com.rhd.learningkafka.consumers.wikimedia.WikimediaConsumer;
 import com.rhd.learningkafka.producers.wikimedia.WikiMediaChangesProducer;
+import com.rhd.learningkafka.producers.wikimedia.WikiMediaEventHandler;
 import com.rhd.learningkafka.properties.PropertiesFactory;
 
 public class Main {
@@ -27,6 +30,9 @@ public class Main {
     private final static String CONSUMER = "CONSUMER";
     private final static String PRODUCER = "PRODUCER";
     private Properties properties = null;
+    private static final Logger log = LoggerFactory.getLogger(Main.class.getSimpleName());
+    @SuppressWarnings("deprecation")
+    
     public static void main(String[] args) {
         Main main = null;
         if(args[0].toUpperCase().trim().equals(PRODUCER)){
@@ -41,30 +47,45 @@ public class Main {
         }else if(args[0].toUpperCase().trim().equals(CONSUMER)){
             main = new Main();
             main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer();
-            
+            WikimediaConsumer wikimediaConsumer = new WikimediaConsumer();
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(main.properties);
-            RestHighLevelClient client = WikimediaConsumer.createOpenSearchClient();
+            RestHighLevelClient client = wikimediaConsumer.createOpenSearchClient();
             CreateIndexRequest createIndexRequest = new CreateIndexRequest("wikimedia");
             
 
             try(client; consumer){
-                Boolean exists = client.indices().exists(new GetIndexRequest().indices("wikimedia"), RequestOptions.DEFAULT);
-                //.exists(new GetIndexRequest("wikimedia"), RequestOptions.DEFAULT );
+                Boolean exists = client.indices()
+                    .exists(new GetIndexRequest()
+                    .indices("wikimedia"), RequestOptions.DEFAULT);
+                
                 if(!exists){
                     client.indices().create(createIndexRequest, RequestOptions.DEFAULT);
-
-                }else{
-
                 }
+
                 consumer.subscribe(Collections.singleton("wikimedia.recentchange"));
+                
                 while(true){
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(3000));
                     Integer recordCount = records.count();
+                
+                    /*Strategies for indepotence
+                     * 
+                     * 1 - id = topic_partition_offset
+                     *      Ex: String id = record.topic()+"_"+record.partition()+"_"+record.offset();
+                     * 2 - Use the ID of the data itself, in case it have one;
+                     *      ex: extract the id from the data itself either mapping or using the Gson dependency; see WikimediaConsumer class for an example
+                     */
+
                     for(ConsumerRecord<String, String> record: records){
-                        IndexRequest IndexRequest = new IndexRequest("wikimedia").source(record.value(), XContentType.JSON);
+                        //Without id / indepotence
+                        //IndexRequest IndexRequest = new IndexRequest("wikimedia").source(record.value(), XContentType.JSON);
+
+                        //With ID / Indepotence
+                        IndexRequest IndexRequest = new IndexRequest("wikimedia").source(record.value(), XContentType.JSON).id(wikimediaConsumer.getIdFromData(record.value()));
                         IndexResponse response =  client.index(IndexRequest, RequestOptions.DEFAULT);
                         System.out.println(response.getId());
                     }
+
                 }
             }catch(IOException e){
                 e.printStackTrace();
