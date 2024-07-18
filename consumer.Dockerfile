@@ -6,7 +6,7 @@ COPY src src/
 COPY pom.xml pom.xml
 RUN mvn install
 RUN mvn clean package
-CMD ["java", "-jar", "target/learningkafka-1.0-SNAPSHOT.jar", "PRODUCER"]
+CMD ["java", "-jar", "target/learningkafka-1.0-SNAPSHOT.jar", "CONSUMER"]
 #BUILD STAGE
 
 

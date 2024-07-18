@@ -29,6 +29,7 @@ public class Main {
 
     private final static String CONSUMER = "CONSUMER";
     private final static String PRODUCER = "PRODUCER";
+    private final static Boolean MANUAL = true;
     private Properties properties = null;
     private static final Logger log = LoggerFactory.getLogger(Main.class.getSimpleName());
     @SuppressWarnings("deprecation")
@@ -46,7 +47,10 @@ public class Main {
             }
         }else if(args[0].toUpperCase().trim().equals(CONSUMER)){
             main = new Main();
-            main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer();
+            //Auto commit
+            //main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer();
+            //Manual commit
+            main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer(MANUAL);
             WikimediaConsumer wikimediaConsumer = new WikimediaConsumer();
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(main.properties);
             RestHighLevelClient client = wikimediaConsumer.createOpenSearchClient();
@@ -81,11 +85,16 @@ public class Main {
                         //IndexRequest IndexRequest = new IndexRequest("wikimedia").source(record.value(), XContentType.JSON);
 
                         //With ID / Indepotence
-                        IndexRequest IndexRequest = new IndexRequest("wikimedia").source(record.value(), XContentType.JSON).id(wikimediaConsumer.getIdFromData(record.value()));
-                        IndexResponse response =  client.index(IndexRequest, RequestOptions.DEFAULT);
-                        System.out.println(response.getId());
+                        try{
+                            IndexRequest IndexRequest = new IndexRequest("wikimedia").source(record.value(), XContentType.JSON).id(wikimediaConsumer.getIdFromData(record.value()));
+                            IndexResponse response =  client.index(IndexRequest, RequestOptions.DEFAULT);
+                           // System.out.println(response.getId());
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                     }
-
+                    consumer.commitSync();
+                    System.out.println("COMMITED");
                 }
             }catch(IOException e){
                 e.printStackTrace();
