@@ -8,10 +8,11 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
+import org.opensearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FirstConsumerClient implements Consumer {
+public class FirstConsumerClient implements ConsumerInterface {
 
     private Properties properties;
     private static final Logger log = LoggerFactory.getLogger(FirstConsumerClient.class.getSimpleName());
@@ -20,23 +21,6 @@ public class FirstConsumerClient implements Consumer {
     public FirstConsumerClient(Properties properties) {
         this.properties = properties;
         this.consumer = new KafkaConsumer<>(this.properties);
-    }
-
-    public void consumerClient() {
-        // subscribe for topic
-        this.consumer.subscribe(Arrays.asList("demo_java_with_keys"));
-        this.setupRuntime();
-        try {
-            this.execute();
-        } catch (WakeupException e) {
-            log.info("Expected. Shutting down");
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        } finally {
-            this.consumer.close();
-            log.info("Consumer shutdown");
-        }
-
     }
 
     public void setupRuntime() {
@@ -54,7 +38,8 @@ public class FirstConsumerClient implements Consumer {
         });
     }
 
-    public void execute() {
+    @Override
+    public void consume() {
         while (true) {
             // poll for data
             log.info("polling");
@@ -65,4 +50,31 @@ public class FirstConsumerClient implements Consumer {
             }
         }
     }
+
+    public ConsumerInterface s1etupClient() {
+        // subscribe for topic
+        this.consumer.subscribe(Arrays.asList("demo_java_with_keys"));
+        this.setupRuntime();
+        try {
+            this.consume();
+        } catch (WakeupException e) {
+            log.info("Expected. Shutting down");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            this.consumer.close();
+            log.info("Consumer shutdown");
+        }
+        return this;
+    }
+
+    @Override
+    public void consume(RestHighLevelClient client, KafkaConsumer<String, String> consumer) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'consume'");
+    }
+
+    
+
+    
 }

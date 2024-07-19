@@ -15,3 +15,4 @@ To do List:
     4 - set the docker compose file to run everything - 
     5 - upgrade to run with quarkus (optional) -
     6 - Fix Deprecated methods - 
+    7 - Refactor FirstConsumerClient
