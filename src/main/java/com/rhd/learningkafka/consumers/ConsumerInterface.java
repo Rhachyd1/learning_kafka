@@ -6,5 +6,5 @@ import org.opensearch.client.RestHighLevelClient;
 public interface ConsumerInterface {
    
    public void consume();
-   public void consume( RestHighLevelClient client, KafkaConsumer<String, String> consumer);
+   //public void consume( RestHighLevelClient client, KafkaConsumer<String, String> consumer);
 }

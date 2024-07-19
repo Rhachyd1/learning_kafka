@@ -45,7 +45,7 @@ public class Main {
            
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(main.properties);
             CreateIndexRequest createIndexRequest = new CreateIndexRequest("wikimedia");
-            ConsumerInterface wikimediaConsumer = new WikimediaConsumer(createIndexRequest);
+            WikimediaConsumer wikimediaConsumer = new WikimediaConsumer(createIndexRequest);
             wikimediaConsumer.consume(new LocalRestClient(CONN_STRING).createOpenSearchClient(), consumer);
             
             

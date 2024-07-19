@@ -68,13 +68,5 @@ public class FirstConsumerClient implements ConsumerInterface {
         return this;
     }
 
-    @Override
-    public void consume(RestHighLevelClient client, KafkaConsumer<String, String> consumer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'consume'");
-    }
-
-    
-
     
 }

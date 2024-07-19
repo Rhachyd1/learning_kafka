@@ -38,7 +38,7 @@ public class WikimediaConsumer implements ConsumerInterface {
         this.indexRequest = indexRequest;
     }
 
-    @Override
+    
     public void consume(RestHighLevelClient client, KafkaConsumer<String, String> consumer) {
         
         try(client; consumer){
