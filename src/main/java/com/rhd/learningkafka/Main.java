@@ -34,12 +34,11 @@ public class Main {
         }else if(args[0].toUpperCase().trim().equals(CONSUMER)){
             
             /*
-                Auto commit
-                main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer();
-            */
-            
-            /*
+                Auto commit:
+                    main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer();
+         
                 Manual commit
+                    main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer(MANUAL);
             */
             main.properties = PropertiesFactory.buildOpenSearchWikimediaConsumer(MANUAL);
            
@@ -50,18 +49,17 @@ public class Main {
             
             
         }   
+    /* 
+        Properties propertiesProducer = PropertiesFactory.buildAsProducer();
 
-        // Properties propertiesProducer = PropertiesFactory.buildAsProducer();
+        LocalProducer producerClient = new LocalProducer(propertiesProducer);
+        producerClient.sendWithCallbackAndKeys();
+        Properties propertiesConsumer =  PropertiesFactory.buildAsConsumer();
+        propertiesConsumer.setProperty("partition.assingment.strategy", CooperativeStickyAssignor.class.getName());
 
-        // LocalProducer producerClient = new LocalProducer(propertiesProducer);
-        // producerClient.sendWithCallbackAndKeys();
-
-        // Properties propertiesConsumer =  PropertiesFactory.buildAsConsumer();
-        // propertiesConsumer.setProperty("partition.assingment.strategy", CooperativeStickyAssignor.class.getName());
-
-        // FirstConsumerClient consumerClient = new FirstConsumerClient(propertiesConsumer);
-        // consumerClient.consume();
-        
+        FirstConsumerClient consumerClient = new FirstConsumerClient(propertiesConsumer);
+        consumerClient.consume();
+    */    
     }
 
    
