@@ -6,7 +6,7 @@ Sample project for learning Kafka
     To run as a Consumer using maven:  mvn exec:java -Dexec.args="CONSUMER"
 
     Remember: docker build --file filename --tag tagname .
-
+    Remember: docker container run --name learning-kafka-producer -d --network=learning_kafka_default learning-kafka-producer:latest 
 To do List:
 
     1 - Fix Project Setup - DONE
